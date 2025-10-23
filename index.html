@@ -1,28 +1,48 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8" />
-    <title>Demo Components</title>
-    <script type="module">
-        import { loadComponent } from "../components/component-loader.js";
-
-        // Cargar componentes
-        await loadComponent("../components/my-button.html");
-
-        // Después de cargarlos, ya puedes usarlos
-        document.addEventListener("DOMContentLoaded", () => {
-            const container = document.getElementById("app");
-            container.innerHTML = `
-          <h1>Ejemplo de componente externo</h1>
-          <my-button></my-button>
-        `;
-        });
-    </script>
-</head>
-
+<html lang="es">
+<head><meta charset="UTF-8"><title>Demo</title></head>
 <body>
-    <div id="app"></div>
-</body>
+  <h1>Componente externo</h1>
+  <my-card>
+    <span slot="title">Tarjeta</span>
+    <span slot="desc">Descripción breve</span>
+    <p>Contenido principal de la tarjeta.</p>
+  </my-card>
+  <my-button></my-button>
+  
 
+  <script type="module">
+    // Carga un componente HTML externo y lo inyecta en la página
+    async function importComponent(url) {
+      const res = await fetch(url);
+      const html = await res.text();
+      const tpl = document.createElement('template');
+      tpl.innerHTML = html;
+      // append the internal <template> so it can be referenced by id
+      const inner = tpl.content.querySelector('template');
+      if (inner) document.body.appendChild(inner);
+
+      // execute module script inside the component (if any)
+      const script = tpl.content.querySelector('script[type="module"]');
+      if (script) {
+        const code = script.textContent;
+        const blob = new Blob([code], { type: 'text/javascript' });
+        const moduleUrl = URL.createObjectURL(blob);
+        await import(moduleUrl);
+      }
+    }
+
+    // implementa una function para cargar todos los componentes de /components
+    async function loadAllComponents() {
+      const components = [
+        './components/my-button.html',
+        './components/my-card.html',
+      ];
+      for (const component of components) {
+        await importComponent(component);
+      }
+    }
+    loadAllComponents();
+  </script>
+</body>
 </html>

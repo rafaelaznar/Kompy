@@ -1,0 +1,28 @@
+<template id="my-button">
+  <style>
+    button {
+      background: coral;
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+  <button>Click!</button>
+</template>
+
+<script type="module">
+  class MyButton extends HTMLElement {
+    constructor() {
+      super();
+      const tpl = document.getElementById('my-button').content.cloneNode(true);
+      this.attachShadow({mode: 'open'}).appendChild(tpl);
+    }
+    connectedCallback() {
+      this.shadowRoot.querySelector('button').onclick = () =>
+        alert('Hola desde MyButton!');
+    }
+  }
+  customElements.define('my-button', MyButton);
+</script>

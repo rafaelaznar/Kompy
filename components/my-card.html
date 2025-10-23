@@ -1,0 +1,43 @@
+<template id="my-card">
+  <style>
+    :host {
+      display: block;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    .card {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      background: white;
+    }
+    .title {
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+      color: #222;
+      font-size: 1.05rem;
+    }
+    .desc {
+      margin: 0 0 0.75rem 0;
+      color: #555;
+      font-size: 0.95rem;
+    }
+  </style>
+  <div class="card">
+    <div class="title"><slot name="title">Card title</slot></div>
+    <div class="desc"><slot name="desc">A short description.</slot></div>
+    <div class="content"><slot></slot></div>
+  </div>
+</template>
+
+<script type="module">
+  class MyCard extends HTMLElement {
+    constructor() {
+      super();
+      const tpl = document.getElementById('my-card').content.cloneNode(true);
+      this.attachShadow({ mode: 'open' }).appendChild(tpl);
+    }
+  }
+
+  customElements.define('my-card', MyCard);
+</script>
