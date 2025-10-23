@@ -17,11 +17,20 @@
     constructor() {
       super();
       const tpl = document.getElementById('my-button').content.cloneNode(true);
-      this.attachShadow({mode: 'open'}).appendChild(tpl);
+      this.attachShadow({ mode: 'open' }).appendChild(tpl);
     }
     connectedCallback() {
-      this.shadowRoot.querySelector('button').onclick = () =>
+      this.shadowRoot.querySelector('button').onclick = () => {
+        // keep the internal behavior
         alert('Hola desde MyButton!');
+        // also dispatch a composed, bubbling custom event so the page
+        // can listen on <my-button> for `my-button-click` events
+        const detail = {
+          timestamp: Date.now(),
+          value: this.getAttribute('value') || null
+        };
+        this.dispatchEvent(new CustomEvent('my-button-click', { detail, bubbles: true, composed: true }));
+      };
     }
   }
   customElements.define('my-button', MyButton);

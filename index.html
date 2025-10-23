@@ -9,7 +9,7 @@
     <p>Contenido principal de la tarjeta.</p>
   </my-card>
   <my-button></my-button>
-  
+
 
   <script type="module">
     // Carga un componente HTML externo y lo inyecta en la página
@@ -42,7 +42,25 @@
         await importComponent(component);
       }
     }
-    loadAllComponents();
+    await loadAllComponents();
+
+    // Delegated listener for my-button events: attach at document level
+    document.addEventListener('my-button-click', (e) => {
+      const h1 = document.querySelector('h1');
+      if (h1) {
+        const { timestamp, value } = e.detail || {};
+        h1.textContent = `Has pulsado el my-button! ${value ? `(value=${value}) ` : ''}${timestamp ? new Date(timestamp).toLocaleTimeString() : ''}`;
+        // cambia la descripcion del my-card slot="desc" para que agregue la hora del click
+        const myCard = document.querySelector('my-card');
+        if (myCard) {
+          // find the light-DOM node that was assigned to slot="desc"
+          const slotDesc = myCard.querySelector('[slot="desc"]');
+          if (slotDesc) {
+            slotDesc.textContent = `Descripción actualizada: ${value ? `(value=${value}) ` : ''}${timestamp ? new Date(timestamp).toLocaleTimeString() : ''}`;
+          }
+        }
+      }
+    });
   </script>
 </body>
 </html>
