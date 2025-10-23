@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Demo Components</title>
+    <script type="module">
+        import { loadComponent } from "../components/component-loader.js";
+
+        // Cargar componentes
+        await loadComponent("../components/my-button.html");
+
+        // Después de cargarlos, ya puedes usarlos
+        document.addEventListener("DOMContentLoaded", () => {
+            const container = document.getElementById("app");
+            container.innerHTML = `
+          <h1>Ejemplo de componente externo</h1>
+          <my-button></my-button>
+        `;
+        });
+    </script>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+</html>
